@@ -1,10 +1,4 @@
-import * as React from 'react'
-import styles from './styles.module.css'
-
-interface Props {
-  text: string
-}
-
-export const ExampleComponent = ({ text }: Props) => {
-  return <div className={styles.test}>Example Component: {text}</div>
-}
+export type { DialogContextProps } from './types';
+export { default as DialogProvider } from './DialogProvider';
+export { default as useDialogByName } from './use-dialog-by-name';
+export { default as useDialog } from './use-dialog';
