@@ -95,7 +95,6 @@ const dialogs: Record<Dialogs, () => JSX.Element> = {
 
 ...
 
-// in the React app entry point you should wrap everything into a DialogProvider
 import ReactDOM from 'react-dom';
 import { DialogEntry, DialogProvider } from 'use-react-dialog';
 
@@ -104,8 +103,8 @@ const dialogsMap = new Map(
 );
 
 ReactDOM.render(
-  <DialogProvider>
-    <DialogEntry dialogsMap={dialogsMap} />
+  <DialogProvider dialogsMap={dialogsMap}>
+    ... // your app
   </DialogProvider>,
   document.getElementById('root'),
 );
@@ -147,7 +146,6 @@ const dialogs = {
 
 ...
 
-// in react app entry point you have to wrap everything into DialogProvider
 import ReactDOM from 'react-dom';
 import { DialogEntry, DialogProvider } from 'use-react-dialog';
 
@@ -156,8 +154,8 @@ const dialogsMap = new Map(
 );
 
 ReactDOM.render(
-  <DialogProvider>
-    <DialogEntry dialogsMap={dialogsMap} />
+  <DialogProvider dialogsMap={dialogsMap}>
+    ... // your app
   </DialogProvider>,
   document.getElementById('root'),
 );
