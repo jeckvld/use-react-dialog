@@ -5,3 +5,12 @@ export interface DialogContextProps {
   updateDialog(name: string, data?: any): void;
   closeAllDialogs(): void;
 }
+
+export interface DialogByNameContextProps extends DialogContextProps {
+  isOpen: boolean;
+  index: number;
+  openCurrentDialog(data?: any): void;
+  closeCurrentDialog(): void;
+  updateCurrentDialog(data?: any): void;
+  data?: any;
+}

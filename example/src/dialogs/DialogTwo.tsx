@@ -1,4 +1,4 @@
-import { useDialogByName } from 'use-react-dialog';
+import { useDialog } from 'use-react-dialog';
 import {
   Dialog,
   DialogTitle,
@@ -17,7 +17,7 @@ export default function DialogTwo() {
     openDialog,
     closeAllDialogs,
     data,
-  } = useDialogByName(Dialogs.DialogTwo);
+  } = useDialog(Dialogs.DialogTwo);
 
   return (
     <Dialog open={isOpen} fullWidth>

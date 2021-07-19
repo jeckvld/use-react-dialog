@@ -1,19 +1,12 @@
-import { useCallback, useMemo } from 'react';
-import useDialog from './use-dialog';
-import type { DialogContextProps } from './types';
+import { useCallback, useMemo, useContext } from 'react';
+import DialogContext from './context';
+import type { DialogByNameContextProps, DialogContextProps } from './types';
 
-interface UseDialogByName extends DialogContextProps {
-  isOpen: boolean;
-  index: number;
-  openCurrentDialog(data?: any): void;
-  closeCurrentDialog(): void;
-  updateCurrentDialog(data?: any): void;
-  data?: any;
-}
-
-export default function useDialogByName(name: string): UseDialogByName {
+export default function useDialogByName(
+  name: string,
+): DialogByNameContextProps {
   const { dialogs, openDialog, closeDialog, updateDialog, ...rest } =
-    useDialog();
+    useContext<DialogContextProps>(DialogContext);
 
   const dialog = useMemo(
     () => dialogs.find((dialog) => dialog.name === name),
@@ -35,11 +28,12 @@ export default function useDialogByName(name: string): UseDialogByName {
     [updateDialog, name],
   );
 
-  if (!dialog) {
-    return {
+  return useMemo(
+    () => ({
       ...rest,
-      isOpen: false,
-      index: -1,
+      isOpen: dialog ? true : false,
+      index: dialog ? dialog.index : -1,
+      data: dialog ? dialog.data : undefined,
       openCurrentDialog,
       closeCurrentDialog,
       updateCurrentDialog,
@@ -47,20 +41,17 @@ export default function useDialogByName(name: string): UseDialogByName {
       openDialog,
       closeDialog,
       updateDialog,
-    };
-  }
-
-  return {
-    ...rest,
-    isOpen: true,
-    index: dialog.index,
-    data: dialog.data,
-    openCurrentDialog,
-    closeCurrentDialog,
-    updateCurrentDialog,
-    dialogs,
-    openDialog,
-    closeDialog,
-    updateDialog,
-  };
+    }),
+    [
+      rest,
+      openCurrentDialog,
+      closeCurrentDialog,
+      updateCurrentDialog,
+      dialogs,
+      dialog,
+      openDialog,
+      closeDialog,
+      updateDialog,
+    ],
+  );
 }

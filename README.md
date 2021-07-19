@@ -26,24 +26,21 @@ Returns: ReactNode.
 
 **`useDialog`** - React Hook. Used for fetching data from the DialogProvider.
 
-Props: no props.
+Props:
+
+- `name`- a string that is used as an identifier for a dialog window. Optional.
+
 Returns:
 
+- `name`- a string that is used as an identifier for a dialog window.
+  Returns:
 - `dialogs` - an array of all the dialogs that are open at the moment. Default value: [].
 - `openDialog` - a function that is used for opening a dialog window. Only one dialog can be opened within one function call.
 - `closeDialog`- a function that is used for closing a dialog window. Only one dialog can be closed within one function call.
 - `updateDialog`- a function that is used for updating a dialog window. Only one dialog can be updated within one function call.
 - `closeAllDialogs`- a function that is used for closing all the open dialogs.
+- Returns these properties only when `name` is provided to the hook:
 
----
-
-**`useDialogByName`** - React Hook. Used for fetching data from the DialogProvider.
-
-Props:
-
-- `name`- a string that is used as an identifier for a dialog window.
-  Returns:
-- All the props from `useDialog` return value.
 - `index` - a number that indicates the index of the current dialog in a `dialogs` array. If the dialog is closed this equals `-1`.
 - `openCurrentDialog` - a function that is used for opening dialog window by name that was passed to the hook.
 - `closeCurrentDialog`- a function that is used for closing dialog window by name that was passed to the hook.
@@ -54,7 +51,7 @@ Props:
 ## Usage (TypeScript)
 
 ```tsx
-import { useDialogByName } from 'use-react-dialog';
+import { useDialog } from 'use-react-dialog';
 
 // define an enum of all the dialog types you have in the application (optional)
 export enum Dialogs {
@@ -65,7 +62,7 @@ export enum Dialogs {
 
 // implement functionality of your dialog
 function DialogOne() {
-  const { closeCurrentDialog, isOpen, openDialog } = useDialogByName(
+  const { closeCurrentDialog, isOpen, openDialog } = useDialog(
     Dialogs.DialogOne,
   );
 
@@ -113,11 +110,11 @@ ReactDOM.render(
 ## Usage (JavaScript)
 
 ```tsx
-import { useDialogByName } from 'use-react-dialog';
+import { useDialog } from 'use-react-dialog';
 
 // implement functionality of your dialog
 function DialogOne() {
-  const { closeCurrentDialog, isOpen, openDialog } = useDialogByName(
+  const { closeCurrentDialog, isOpen, openDialog } = useDialog(
     Dialogs.DialogOne,
   );
 
