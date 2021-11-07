@@ -39,7 +39,8 @@ Returns:
 - `closeDialog`- a function that is used for closing a dialog window. Only one dialog can be closed within one function call.
 - `updateDialog`- a function that is used for updating a dialog window. Only one dialog can be updated within one function call.
 - `closeAllDialogs`- a function that is used for closing all the open dialogs.
-- Returns these properties only when `name` is provided to the hook:
+
+Returns these properties only when `name` is provided to the hook:
 
 - `index` - a number that indicates the index of the current dialog in a `dialogs` array. If the dialog is closed this equals `-1`.
 - `openCurrentDialog` - a function that is used for opening dialog window by name that was passed to the hook.
@@ -160,7 +161,9 @@ ReactDOM.render(
 
 ## Examples
 
-Executable TypeScript example you can find in [/example](/example) directory.
+Live demo (MaterialUI, TypeScript, CodeSandbox) example you can find [here](https://codesandbox.io/s/use-react-dialog-j9yq7).
+
+Source code of that example you can find in [/example](/example) directory.
 
 ## License
 
