@@ -12,7 +12,7 @@
     "@types/react-dom": "link:../node_modules/@types/react-dom",
     "react": "link:../node_modules/react",
     "react-dom": "link:../node_modules/react-dom",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.0",
     "typescript": "link:../node_modules/typescript",
     "use-react-dialog": "link:.."
   },
