@@ -1,6 +1,5 @@
 import { useDialog } from 'use-react-dialog';
-import { Box, Button } from '@material-ui/core';
-import { Dialogs } from './dialogs';
+import { Box, Button } from '@mui/material';
 
 export default function App() {
   const { dialogs, openDialog } = useDialog();
@@ -13,7 +12,7 @@ export default function App() {
           color='primary'
           variant='contained'
           onClick={() =>
-            openDialog(Dialogs.DialogOne, {
+            openDialog('DialogOne', {
               message:
                 'This message was passed from the initial page through the React Context.',
             })
@@ -26,7 +25,7 @@ export default function App() {
           color='primary'
           variant='contained'
           onClick={() =>
-            openDialog(Dialogs.DialogTwo, {
+            openDialog('DialogTwo', {
               message:
                 'This message was passed from the initial page through the React Context.',
             })

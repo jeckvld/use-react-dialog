@@ -1,16 +1,12 @@
+import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DialogProvider from '../src/DialogProvider';
 import useDialogByName from '../src/use-dialog-by-name';
 
-enum Dialogs {
-  DialogOne = 'DialogOne',
-  DialogTwo = 'DialogTwo',
-}
-
-const dialogsMap = new Map([
-  [Dialogs.DialogOne, () => <p>this is {Dialogs.DialogOne}</p>],
-  [Dialogs.DialogTwo, () => <p>this is {Dialogs.DialogTwo}</p>],
-]);
+const dialogs = {
+  DialogOne: () => <p>this is DialogOne</p>,
+  DialogTwo: () => <p>this is DialogTwo</p>,
+} as const;
 
 function Test() {
   const {
@@ -21,115 +17,78 @@ function Test() {
     openDialog,
     closeAllDialogs,
     updateDialog,
-  } = useDialogByName(Dialogs.DialogOne);
+  } = useDialogByName<{ message?: string }, keyof typeof dialogs>('DialogOne');
 
   return (
     <>
       Data: {data?.message || 'no data provided'}
-      <button onClick={() => openDialog(Dialogs.DialogTwo)}>
-        open {Dialogs.DialogTwo}
-      </button>
-      <button onClick={openCurrentDialog}>open {Dialogs.DialogOne}</button>
+      <button onClick={() => openDialog('DialogTwo')}>open DialogTwo</button>
+      <button onClick={() => openCurrentDialog()}>open DialogOne</button>
       <button
         onClick={() => updateCurrentDialog({ message: 'updated message!' })}
       >
-        update {Dialogs.DialogOne}
+        update DialogOne
       </button>
       <button
-        onClick={() => updateDialog('unknown', { message: 'updated message!' })}
+        onClick={() =>
+          updateDialog('unknown' as any, { message: 'updated message!' })
+        }
       >
         update unknown dialog
       </button>
-      <button onClick={closeCurrentDialog}>close {Dialogs.DialogOne}</button>
+      <button onClick={closeCurrentDialog}>close DialogOne</button>
       <button onClick={closeAllDialogs}>close all</button>
     </>
   );
 }
 
 describe('tests', () => {
-  test('throw when dialogsMap is not provided', () => {
-    // mock console.error to keep logs clean here
-    console.error = jest.fn();
-
-    expect(() =>
-      render(<DialogProvider dialogsMap={undefined as any} />),
-    ).toThrowError('DialogEntry: dialogsMap is not provided.');
-  });
-
   test('show nothing when Dialog component was not found in the dialogsMap', () => {
     render(
-      <DialogProvider dialogsMap={new Map()}>
+      <DialogProvider dialogs={{}}>
         <Test />
       </DialogProvider>,
     );
 
     // open the dialog
-    const open = screen.getByText(`open ${Dialogs.DialogOne}`);
+    const open = screen.getByText(`open DialogOne`);
     fireEvent.click(open);
 
     // dialog wasn't opened because according component was not found
-    expect(screen.queryByText(`this is ${Dialogs.DialogOne}`)).toBeFalsy();
+    expect(screen.queryByText(`this is DialogOne`)).toBeFalsy();
   });
 
   test('open dialog', () => {
     render(
-      <DialogProvider dialogsMap={dialogsMap}>
+      <DialogProvider dialogs={dialogs}>
         <Test />
       </DialogProvider>,
     );
 
     // open the dialog
-    const open = screen.getByText(`open ${Dialogs.DialogOne}`);
+    const open = screen.getByText(`open DialogOne`);
     fireEvent.click(open);
 
     // dialog was opened
-    screen.getByText(`this is ${Dialogs.DialogOne}`);
-  });
-
-  test('open same dialog two times', async () => {
-    // mock console.warn to keep logs clean here
-    console.warn = jest.fn();
-
-    render(
-      <DialogProvider dialogsMap={dialogsMap}>
-        <Test />
-      </DialogProvider>,
-    );
-
-    // open the dialog
-    const open = screen.getByText(`open ${Dialogs.DialogOne}`);
-    fireEvent.click(open);
-
-    // dialog was opened
-    screen.getByText(`this is ${Dialogs.DialogOne}`);
-
-    // click open the same dialog on more time
-    fireEvent.click(open);
-
-    await waitFor(() => {
-      // warning about opening the same dialog
-      expect(console.warn).toHaveBeenCalledWith(
-        `Dialog with name ${Dialogs.DialogOne} is opened already.`,
-      );
-    });
+    screen.getByText(`this is DialogOne`);
   });
 
   test('update dialog', async () => {
     render(
-      <DialogProvider dialogsMap={dialogsMap}>
+      <DialogProvider dialogs={dialogs}>
         <Test />
       </DialogProvider>,
     );
 
     // open the dialog
-    const open = screen.getByText(`open ${Dialogs.DialogOne}`);
+    const open = screen.getByText(`open DialogOne`);
     fireEvent.click(open);
 
     // no data provided by default
     screen.getByText('Data: no data provided');
 
     // update the dialog
-    const update = screen.getByText(`update ${Dialogs.DialogOne}`);
+    const update = screen.getByText(`update DialogOne`);
     fireEvent.click(update);
 
     await waitFor(() => {
@@ -143,13 +102,13 @@ describe('tests', () => {
     console.warn = jest.fn();
 
     render(
-      <DialogProvider dialogsMap={dialogsMap}>
+      <DialogProvider dialogs={dialogs}>
         <Test />
       </DialogProvider>,
     );
 
     // open a dialog
-    const open = screen.getByText(`open ${Dialogs.DialogOne}`);
+    const open = screen.getByText(`open DialogOne`);
     fireEvent.click(open);
 
     // update unknown dialog
@@ -158,56 +117,56 @@ describe('tests', () => {
 
     await waitFor(() => {
       expect(console.warn).toHaveBeenCalledWith(
-        'Dialog with name unknown was not found in the context. It could be closed at the moment.',
+        'Dialog unknown was not found in the context.',
       );
     });
   });
 
   test('close dialog', () => {
     render(
-      <DialogProvider dialogsMap={dialogsMap}>
+      <DialogProvider dialogs={dialogs}>
         <Test />
       </DialogProvider>,
     );
 
     // open the dialog
-    const open = screen.getByText(`open ${Dialogs.DialogOne}`);
+    const open = screen.getByText(`open DialogOne`);
     fireEvent.click(open);
 
     // dialog was opened
-    screen.getByText(`this is ${Dialogs.DialogOne}`);
+    screen.getByText(`this is DialogOne`);
 
     // click close button
-    const close = screen.getByText(`close ${Dialogs.DialogOne}`);
+    const close = screen.getByText(`close DialogOne`);
     fireEvent.click(close);
 
     // dialog in closed
-    expect(screen.queryByText(`this is ${Dialogs.DialogOne}`)).toBeFalsy();
+    expect(screen.queryByText(`this is DialogOne`)).toBeFalsy();
   });
 
   test('open two dialogs and then close all of them', () => {
     render(
-      <DialogProvider dialogsMap={dialogsMap}>
+      <DialogProvider dialogs={dialogs}>
         <Test />
       </DialogProvider>,
     );
 
-    const openDialogOne = screen.getByText(`open ${Dialogs.DialogOne}`);
+    const openDialogOne = screen.getByText(`open DialogOne`);
     fireEvent.click(openDialogOne);
 
-    const openDialogTwo = screen.getByText(`open ${Dialogs.DialogTwo}`);
+    const openDialogTwo = screen.getByText(`open DialogTwo`);
     fireEvent.click(openDialogTwo);
 
     // both dialogs were opened
-    screen.getByText(`this is ${Dialogs.DialogOne}`);
-    screen.getByText(`this is ${Dialogs.DialogTwo}`);
+    screen.getByText(`this is DialogOne`);
+    screen.getByText(`this is DialogTwo`);
 
     // click close all button
     const closeAll = screen.getByText('close all');
     fireEvent.click(closeAll);
 
     // both dialogs are closed
-    expect(screen.queryByText(`this is ${Dialogs.DialogOne}`)).toBeFalsy();
-    expect(screen.queryByText(`this is ${Dialogs.DialogTwo}`)).toBeFalsy();
+    expect(screen.queryByText(`this is DialogOne`)).toBeFalsy();
+    expect(screen.queryByText(`this is DialogTwo`)).toBeFalsy();
   });
 });

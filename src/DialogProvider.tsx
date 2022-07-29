@@ -1,29 +1,31 @@
-import { PropsWithChildren, useState, useCallback, useMemo } from 'react';
+import React, {
+  PropsWithChildren,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
 import DialogEntry from './DialogEntry';
 import DialogContext from './context';
 
-interface DialogProviderProps {
-  dialogsMap: Map<string, () => JSX.Element>;
+interface DialogProviderProps<TName extends string> {
+  dialogs: Record<TName, () => JSX.Element>;
 }
 
-export default function DialogProvider({
-  dialogsMap,
+export default function DialogProvider<TName extends string>({
+  dialogs: initialDialogs,
   children,
-}: PropsWithChildren<DialogProviderProps>) {
+}: PropsWithChildren<DialogProviderProps<TName>>) {
   const [dialogs, setDialogs] = useState<
     { name: string; data?: any; index: number }[]
   >([]);
 
   const updateDialog = useCallback(
-    (name: string, data?: any) => {
+    (name: TName, data?: any) => {
       const updatedDialogs = dialogs.map((dialog) => {
         if (dialog.name === name) {
-          console.log('updating');
           return { ...dialog, data: { ...dialog.data, ...data } };
         }
-        console.warn(
-          `Dialog with name ${name} was not found in the context. It could be closed at the moment.`,
-        );
+        console.warn(`Dialog ${name} was not found in the context.`);
         return dialog;
       });
       setDialogs(updatedDialogs);
@@ -32,19 +34,17 @@ export default function DialogProvider({
   );
 
   const openDialog = useCallback(
-    (name: string, data?: any) => {
+    (name: TName, data?: any) => {
       const exists = dialogs.find((dialog) => dialog.name === name);
       if (!exists) {
         setDialogs([...dialogs, { name, index: dialogs.length, data }]);
-      } else {
-        console.warn(`Dialog with name ${name} is opened already.`);
       }
     },
     [dialogs, setDialogs],
   );
 
   const closeDialog = useCallback(
-    (name: string) => {
+    (name: TName) => {
       setDialogs(dialogs.filter((dialog) => dialog.name !== name));
     },
     [dialogs, setDialogs],
@@ -63,6 +63,11 @@ export default function DialogProvider({
       closeAllDialogs,
     }),
     [openDialog, dialogs, closeDialog, updateDialog, closeAllDialogs],
+  );
+
+  const dialogsMap = useMemo(
+    () => new Map(Object.entries<() => JSX.Element>(initialDialogs)),
+    [initialDialogs],
   );
 
   return (

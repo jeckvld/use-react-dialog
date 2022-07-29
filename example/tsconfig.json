@@ -3,7 +3,7 @@
     "module": "esnext",
     "lib": ["dom", "esnext"],
     "baseUrl": ".",
-    "moduleResolution":"node",
+    "moduleResolution": "node",
     "jsx": "react-jsx",
     "sourceMap": true,
     "declaration": true,
@@ -25,7 +25,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "use-react-dialog": ["../dist"],
+    }
   },
-  "include": ["src"],
+  "include": ["src", "use-react-dialog.d.ts"],
   "exclude": ["node_modules"]
 }

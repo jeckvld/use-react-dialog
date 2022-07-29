@@ -11,6 +11,6 @@ const initialData = {
   closeAllDialogs: noop,
 };
 
-const DialogContext = createContext<DialogContextProps>(initialData);
+const DialogContext = createContext<DialogContextProps<any>>(initialData);
 
 export default DialogContext;

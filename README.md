@@ -18,9 +18,9 @@ yarn add use-react-dialog
 
 Props:
 
-- `dialogsMap` - a Map that defines all the dialogs in a way: Map<string, DialogComponent>. This is used for identifying the correct dialog component by its name for different operations (e.g. opening, closing, etc.).
+- `dialogs` - an **object** that defines all the dialogs in a way: Record<string, DialogComponent>. This is used for identifying the correct dialog component by its name for different operations (e.g. opening, closing, etc.).
 
-Returns: ReactNode.
+Returns: JSX.Element.
 
 ---
 
@@ -28,48 +28,43 @@ Returns: ReactNode.
 
 Props:
 
-- `name`- a string that is used as an identifier for a dialog window. Optional.
+- `name`- a **string** that is used as an identifier for a dialog window. Optional.
+- `data`- **anything** that is passed as a data to a dialog window. Optional.
 
 Returns:
 
-- `name`- a string that is used as an identifier for a dialog window.
+- `name`- a **string** that is used as an identifier for a dialog window.
   Returns:
-- `dialogs` - an array of all the dialogs that are open at the moment. Default value: [].
-- `openDialog` - a function that is used for opening a dialog window. Only one dialog can be opened within one function call.
-- `closeDialog`- a function that is used for closing a dialog window. Only one dialog can be closed within one function call.
-- `updateDialog`- a function that is used for updating a dialog window. Only one dialog can be updated within one function call.
-- `closeAllDialogs`- a function that is used for closing all the open dialogs.
+- `dialogs` - an **array** of all the dialogs that are open at the moment. Default value: [].
+- `openDialog` - a **function** that is used for opening a dialog window. Only one dialog can be opened within one function call.
+- `closeDialog`- a **function** that is used for closing a dialog window. Only one dialog can be closed within one function call.
+- `updateDialog`- a **function** that is used for updating a dialog window. Only one dialog can be updated within one function call.
+- `closeAllDialogs`- a **function** that is used for closing all the open dialogs.
 
 Returns these properties only when `name` is provided to the hook:
 
-- `index` - a number that indicates the index of the current dialog in a `dialogs` array. If the dialog is closed this equals `-1`.
-- `openCurrentDialog` - a function that is used for opening dialog window by name that was passed to the hook.
-- `closeCurrentDialog`- a function that is used for closing dialog window by name that was passed to the hook.
-- `updateCurrentDialog`- a function that is used for updating dialog window by name that was passed to the hook.
+- `index` - a **number** that indicates the index of the current dialog in a `dialogs` array. If the dialog is closed this equals `-1`.
+- `openCurrentDialog` - a **function** that is used for opening dialog window by name that was passed to the hook. You can pass additional data that will be merged with the data you passed to the `useDialog` hook before.
+- `closeCurrentDialog`- a **function** that is used for closing dialog window by name that was passed to the hook.
+- `updateCurrentDialog`- a **function** that is used for updating dialog window by name that was passed to the hook.
 
 ---
 
-## Usage (TypeScript)
+## Usage (**TypeScript**)
 
 ```tsx
+// src/DialogOne.tsx
+
 import { useDialog } from 'use-react-dialog';
-
-// define an enum of all the dialog types you have in the application (optional)
-export enum Dialogs {
-  DialogOne = 'DialogOne',
-}
-
-...
 
 // implement functionality of your dialog
 function DialogOne() {
-  const { closeCurrentDialog, isOpen, openDialog } = useDialog(
-    Dialogs.DialogOne,
-  );
+  const { closeCurrentDialog, isOpen, openCurrentDialog } = useDialog('DialogOne');
 
   if (!isOpen) {
     return (
-      <button onClick={() => openDialog(Dialogs.DialogOne)}>
+      // opens DialogOne, alternatively can be -> openDialog('dialog name')
+      <button onClick={() => openCurrentDialog()}>
         open dialog one
       </button>
     );
@@ -83,45 +78,65 @@ function DialogOne() {
   );
 }
 
+
 ...
 
+// src/dialogs.ts
+
+import { DialogOne } from './DialogOne';
+
 // define dialogs object that contains all the dialogs you gonna use
-// based on the Dialogs enum for the TypeScript
-const dialogs: Record<Dialogs, () => JSX.Element> = {
+const dialogs = {
   DialogOne,
 } as const;
 
 ...
 
+// use-react-dialog.d.ts
+
+// overwrite the types, so everything is well-typed in your project
+import { DialogByNameContextProps } from 'use-react-dialog';
+import { dialogs } from './src/dialogs';
+
+declare module 'use-react-dialog' {
+  type Name = keyof typeof dialogs;
+  export function useDialog<T>(): DialogByNameContextProps<T, Name>;
+  export function useDialog<T>(
+    name: Name,
+    data?: any,
+  ): DialogByNameContextProps<T, Name>;
+}
+
+...
+
+// src/index.ts
+
 import ReactDOM from 'react-dom';
 import { DialogEntry, DialogProvider } from 'use-react-dialog';
 
-const dialogsMap = new Map(
-  Object.values(dialogs).map((dialog) => [dialog.name, dialog]),
-);
-
 ReactDOM.render(
-  <DialogProvider dialogsMap={dialogsMap}>
+  <DialogProvider dialogs={dialogs}>
     ... // your app
   </DialogProvider>,
   document.getElementById('root'),
 );
 ```
 
-## Usage (JavaScript)
+## Usage (**JavaScript**)
 
 ```tsx
+// src/DialogOne.tsx
+
 import { useDialog } from 'use-react-dialog';
 
 // implement functionality of your dialog
 function DialogOne() {
-  const { closeCurrentDialog, isOpen, openDialog } = useDialog(
-    Dialogs.DialogOne,
-  );
+  const { closeCurrentDialog, isOpen, openCurrentDialog } = useDialog('DialogOne');
 
   if (!isOpen) {
     return (
-      <button onClick={() => openDialog('DialogOne')}>
+      // opens DialogOne, alternatively can be -> openDialog('dialog name')
+      <button onClick={() => openCurrentDialog()}>
         open dialog one
       </button>
     );
@@ -137,6 +152,8 @@ function DialogOne() {
 
 ...
 
+// src/dialogs.ts
+
 // define dialogs object that contains all the dialogs you gonna use
 const dialogs = {
   DialogOne,
@@ -144,15 +161,13 @@ const dialogs = {
 
 ...
 
+// src/index.ts
+
 import ReactDOM from 'react-dom';
 import { DialogEntry, DialogProvider } from 'use-react-dialog';
 
-const dialogsMap = new Map(
-  Object.values(dialogs).map((dialog) => [dialog.name, dialog]),
-);
-
 ReactDOM.render(
-  <DialogProvider dialogsMap={dialogsMap}>
+  <DialogProvider dialogs={dialogs}>
     ... // your app
   </DialogProvider>,
   document.getElementById('root'),

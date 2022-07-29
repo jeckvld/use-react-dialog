@@ -1,12 +1,13 @@
-import { useCallback, useMemo, useContext } from 'react';
+import React, { useCallback, useMemo, useContext } from 'react';
 import DialogContext from './context';
 import type { DialogByNameContextProps, DialogContextProps } from './types';
 
-export default function useDialogByName(
-  name: string,
-): DialogByNameContextProps {
+export default function useDialogByName<TData, TName = string>(
+  name: TName,
+  data?: TData,
+): DialogByNameContextProps<TData, TName> {
   const { dialogs, openDialog, closeDialog, updateDialog, ...rest } =
-    useContext<DialogContextProps>(DialogContext);
+    useContext<DialogContextProps<TName>>(DialogContext);
 
   const dialog = useMemo(
     () => dialogs.find((dialog) => dialog.name === name),
@@ -14,7 +15,7 @@ export default function useDialogByName(
   );
 
   const openCurrentDialog = useCallback(
-    (data?: any) => openDialog(name, data),
+    (newData?: TData) => openDialog(name, { ...data, ...newData } as TData),
     [openDialog, name],
   );
 
@@ -24,7 +25,7 @@ export default function useDialogByName(
   );
 
   const updateCurrentDialog = useCallback(
-    (data?: any) => updateDialog(name, data),
+    (newData?: TData) => updateDialog(name, { ...data, ...newData } as TData),
     [updateDialog, name],
   );
 

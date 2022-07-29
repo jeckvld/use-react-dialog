@@ -1,16 +1,17 @@
-export interface DialogContextProps {
-  dialogs: { name: string; index: number; data?: any }[];
-  openDialog(name: string, data?: any): void;
-  closeDialog(name: string): void;
-  updateDialog(name: string, data?: any): void;
+export interface DialogContextProps<TName> {
+  dialogs: { name: TName; index: number; data?: any }[];
+  openDialog(name: TName, data?: any): void;
+  closeDialog(name: TName): void;
+  updateDialog(name: TName, data?: any): void;
   closeAllDialogs(): void;
 }
 
-export interface DialogByNameContextProps extends DialogContextProps {
+export interface DialogByNameContextProps<TData, TName>
+  extends DialogContextProps<TName> {
   isOpen: boolean;
   index: number;
-  openCurrentDialog(data?: any): void;
+  openCurrentDialog(data?: TData): void;
   closeCurrentDialog(): void;
-  updateCurrentDialog(data?: any): void;
-  data?: any;
+  updateCurrentDialog(data?: TData): void;
+  data?: TData;
 }

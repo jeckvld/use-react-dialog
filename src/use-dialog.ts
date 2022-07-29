@@ -1,15 +1,21 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import type { DialogContextProps, DialogByNameContextProps } from './types';
 import DialogContext from './context';
 import useDialogByName from './use-dialog-by-name';
 
-export default function useDialog(): DialogContextProps;
-export default function useDialog(name: string): DialogByNameContextProps;
+export default function useDialog(): DialogContextProps<any>;
+export default function useDialog<TData, TName>(
+  name: TName,
+  data?: any,
+): DialogByNameContextProps<TData, TName>;
 
-export default function useDialog(name?: string) {
+export default function useDialog<TData, TName extends string>(
+  name?: TName,
+  data?: any,
+) {
   if (name) {
-    return useDialogByName(name);
+    return useDialogByName<TData, TName>(name, data);
   }
 
-  return useContext<DialogContextProps>(DialogContext);
+  return useContext<DialogContextProps<TName>>(DialogContext);
 }

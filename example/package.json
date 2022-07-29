@@ -1,23 +1,26 @@
 {
   "name": "use-react-dialog-example",
-  "homepage": ".",
   "version": "0.0.0",
   "private": false,
   "scripts": {
     "start": "react-scripts start"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
-    "@material-ui/core": "^4.12.1",
-    "@types/react": "link:../node_modules/@types/react",
-    "@types/react-dom": "link:../node_modules/@types/react-dom",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.3",
     "react": "link:../node_modules/react",
     "react-dom": "link:../node_modules/react-dom",
-    "react-scripts": "^5.0.0",
-    "typescript": "link:../node_modules/typescript",
-    "use-react-dialog": "link:.."
+    "react-scripts": "^5.0.1",
+    "use-react-dialog": "link:../dist"
   },
   "devDependencies": {
-    "@babel/plugin-syntax-object-rest-spread": "^7.8.3"
+    "@types/react": "link:../node_modules/@types/react",
+    "@types/react-dom": "link:../node_modules/@types/react-dom",
+    "typescript": "link:../node_modules/typescript"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -6,8 +6,7 @@ import {
   Button,
   DialogActions,
   DialogContent,
-} from '@material-ui/core';
-import { Dialogs } from './types';
+} from '@mui/material';
 
 export default function DialogTwo() {
   const {
@@ -17,11 +16,11 @@ export default function DialogTwo() {
     openDialog,
     closeAllDialogs,
     data,
-  } = useDialog(Dialogs.DialogTwo);
+  } = useDialog<{ message: string }>('DialogTwo');
 
   return (
     <Dialog open={isOpen} fullWidth>
-      <DialogTitle>{Dialogs.DialogTwo}</DialogTitle>
+      <DialogTitle>DialogTwo</DialogTitle>
       <Divider />
       <DialogContent>
         <p>This dialog has {index} index in global dialogs stack.</p>
@@ -43,8 +42,9 @@ export default function DialogTwo() {
           color='primary'
           variant='contained'
           onClick={() =>
-            openDialog(Dialogs.DialogOne, {
-              message: `This message was passed from ${Dialogs.DialogTwo} through the React Context.`,
+            openDialog('DialogOne', {
+              message:
+                'This message was passed from DialogTwo through the React Context.',
             })
           }
         >
