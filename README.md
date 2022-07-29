@@ -16,33 +16,34 @@ yarn add use-react-dialog
 
 **`<DialogProvider />`** - React Context Provider. Used for passing context data to the application. Required to be used.
 
-Props:
+_Props:_
 
 - `dialogs` - an **object** that defines all the dialogs in a way: Record<string, DialogComponent>. This is used for identifying the correct dialog component by its name for different operations (e.g. opening, closing, etc.).
 
-Returns: JSX.Element.
+_Returns:_ JSX.Element.
 
 ---
 
 **`useDialog`** - React Hook. Used for fetching data from the DialogProvider.
 
-Props:
+_Props:_
 
 - `name`- a **string** that is used as an identifier for a dialog window. Optional.
 - `data`- **anything** that is passed as a data to a dialog window. Optional.
 
-Returns:
+_Returns:_
 
 - `name`- a **string** that is used as an identifier for a dialog window.
-  Returns:
 - `dialogs` - an **array** of all the dialogs that are open at the moment. Default value: [].
 - `openDialog` - a **function** that is used for opening a dialog window. Only one dialog can be opened within one function call.
 - `closeDialog`- a **function** that is used for closing a dialog window. Only one dialog can be closed within one function call.
 - `updateDialog`- a **function** that is used for updating a dialog window. Only one dialog can be updated within one function call.
 - `closeAllDialogs`- a **function** that is used for closing all the open dialogs.
 
-Returns these properties only when `name` is provided to the hook:
+_Returns these properties only when `name` is provided to the hook:_
 
+- `isOpen` - a **boolean** that indicates the state of the dialog.
+- `data`- **anything** that was passed as a data to a dialog window.
 - `index` - a **number** that indicates the index of the current dialog in a `dialogs` array. If the dialog is closed this equals `-1`.
 - `openCurrentDialog` - a **function** that is used for opening dialog window by name that was passed to the hook. You can pass additional data that will be merged with the data you passed to the `useDialog` hook before.
 - `closeCurrentDialog`- a **function** that is used for closing dialog window by name that was passed to the hook.
@@ -124,8 +125,8 @@ ReactDOM.render(
 
 ## Usage (**JavaScript**)
 
-```tsx
-// src/DialogOne.tsx
+```jsx
+// src/DialogOne.jsx
 
 import { useDialog } from 'use-react-dialog';
 
@@ -152,7 +153,7 @@ function DialogOne() {
 
 ...
 
-// src/dialogs.ts
+// src/dialogs.js
 
 // define dialogs object that contains all the dialogs you gonna use
 const dialogs = {
@@ -161,7 +162,7 @@ const dialogs = {
 
 ...
 
-// src/index.ts
+// src/index.js
 
 import ReactDOM from 'react-dom';
 import { DialogEntry, DialogProvider } from 'use-react-dialog';
@@ -176,7 +177,7 @@ ReactDOM.render(
 
 ## Examples
 
-Live demo (MaterialUI, TypeScript, CodeSandbox) example you can find [here](https://codesandbox.io/s/use-react-dialog-j9yq7).
+Live demo (MaterialUI, TypeScript, CodeSandbox) example you can find [here](https://codesandbox.io/s/use-react-dialog-example-ts-12ljn8).
 
 Source code of that example you can find in [/example](/example) directory.
 
