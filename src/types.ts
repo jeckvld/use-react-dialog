@@ -12,6 +12,6 @@ export interface DialogByNameContextProps<TData, TName>
   index: number;
   openCurrentDialog(data?: TData): void;
   closeCurrentDialog(): void;
-  updateCurrentDialog(data?: TData): void;
-  data?: TData;
+  updateCurrentDialog(data: TData): void;
+  data: TData;
 }

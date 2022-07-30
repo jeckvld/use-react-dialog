@@ -3,10 +3,13 @@ import type { DialogContextProps, DialogByNameContextProps } from './types';
 import DialogContext from './context';
 import useDialogByName from './use-dialog-by-name';
 
-export default function useDialog(): DialogContextProps<any>;
+export default function useDialog(): DialogContextProps<string>;
 export default function useDialog<TData, TName>(
   name: TName,
-  data?: any,
+): DialogByNameContextProps<TData, TName>;
+export default function useDialog<TData, TName>(
+  name: TName,
+  data: TData,
 ): DialogByNameContextProps<TData, TName>;
 
 export default function useDialog<TData, TName extends string>(

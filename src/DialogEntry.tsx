@@ -14,8 +14,8 @@ function DialogWithData<TData, TName extends string>({
   Component,
   name,
 }: DialogProps<TData, TName>) {
-  const { data } = useDialog(name);
-  return <Component data={data as TData} name={name} />;
+  const { data } = useDialog<TData, TName>(name);
+  return <Component data={data} name={name} />;
 }
 
 export default function DialogEntry({ dialogsMap }: DialogEntryProps) {
