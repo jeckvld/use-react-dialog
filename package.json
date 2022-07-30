@@ -20,7 +20,7 @@
     "start:example": "cd ./example && yarn start"
   },
   "peerDependencies": {
-    "react": "^17.0.2"
+    "react": ">=17.8.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",

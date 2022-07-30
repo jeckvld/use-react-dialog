@@ -112,15 +112,20 @@ declare module 'use-react-dialog' {
 
 // src/index.ts
 
-import ReactDOM from 'react-dom';
-import { DialogEntry, DialogProvider } from 'use-react-dialog';
+import { createRoot } from 'react-dom/client';
+import { DialogProvider } from 'use-react-dialog';
+import App from './App';
+import { dialogs } from './dialogs';
 
-ReactDOM.render(
+const container = document.getElementById('root')!;
+const root = createRoot(container);
+
+root.render(
   <DialogProvider dialogs={dialogs}>
-    ... // your app
+    <App />
   </DialogProvider>,
-  document.getElementById('root'),
 );
+
 ```
 
 ## Usage (**JavaScript**)
@@ -164,15 +169,20 @@ const dialogs = {
 
 // src/index.js
 
-import ReactDOM from 'react-dom';
-import { DialogEntry, DialogProvider } from 'use-react-dialog';
+import { createRoot } from 'react-dom/client';
+import { DialogProvider } from 'use-react-dialog';
+import App from './App';
+import { dialogs } from './dialogs';
 
-ReactDOM.render(
+const container = document.getElementById('root')!;
+const root = createRoot(container);
+
+root.render(
   <DialogProvider dialogs={dialogs}>
-    ... // your app
+    <App />
   </DialogProvider>,
-  document.getElementById('root'),
 );
+
 ```
 
 ## Examples
